@@ -97,10 +97,11 @@ html{scroll-behavior:smooth}
 </style>
 <base target="_blank">
 <style data-id="immersive-translate-input-injected-css"></style><base target="_blank">
+<base target="_blank">
 </head>
 <body>
 <header class="top">
-  <div class="brandrow"><div class="brand" title="yiayiayo 书签工作台"><span class="brand-mark">✳</span><span>yiayiayo<span class="brand-dot">.</span></span></div><div class="top-actions"><button class="tiny" id="quickAddEngine" title="添加搜索引擎">＋</button><button class="tiny download-src" id="downloadSource" title="下载当前书签页源码" aria-label="下载当前书签页源码">↓</button></div></div>
+  <div class="brandrow"><div class="brand" title="yiayiayo 书签工作台"><span class="brand-mark">✳</span><span>yiayiayo<span class="brand-dot">.</span></span></div><div class="top-actions"><button class="tiny" id="clearCache" title="清除页面缓存" aria-label="清除页面缓存">⌫</button><button class="tiny download-src" id="downloadSource" title="下载当前书签页源码" aria-label="下载当前书签页源码">↓</button></div></div>
   <form class="searchbar" id="searchForm">
     <div class="enginewrap"><button class="enginebtn" id="engineBtn" type="button">百度</button><div class="dropdown" id="engineDropdown"><div class="engineoption"><span class="engmark">⌕</span><span class="engine-label">搜狗</span><button class="engdel" title="删除 搜狗">×</button></div><div class="engineoption"><span class="engmark">⌕</span><span class="engine-label">百度</span><button class="engdel" title="删除 百度">×</button></div><button class="engine-add">＋ 添加搜索引擎</button></div></div>
     <input class="searchinput" id="searchInput" placeholder="输入搜索关键词" autocomplete="off">
@@ -227,7 +228,8 @@ $("#editForm").onsubmit=e=>{e.preventDefault();const name=$("#fieldName").value.
  save();closeModal();render();toast("已保存");
 };
 $("#engineBtn").onclick=()=>$("#engineDropdown").classList.toggle("open");
-$("#quickAddEngine").onclick=()=>openModal("engine");
+$("#clearCache").onclick=async()=>{const ok=await openDialog({title:"清除页面缓存",msg:"确定清除 <strong>页面缓存</strong> 吗？<br>书签、栏目和搜索引擎设置将恢复为默认。",okText:"清除",danger:true});if(!ok)return;localStorage.removeItem("bookmarkNavData");toast("缓存已清除，即将恢复默认");setTimeout(()=>location.reload(),800)};
+
 $("#downloadSource").onclick=()=>{
  const inject=`try{data=JSON.parse(localStorage.getItem("bookmarkNavData"))||structuredClone(defaultData)}catch(e){data=structuredClone(defaultData)}`;
  const payload=JSON.stringify(data);
@@ -236,7 +238,7 @@ $("#downloadSource").onclick=()=>{
  const blob=new Blob([html],{type:"text/html;charset=utf-8"});
  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="orbit-bookmarks.html";a.click();URL.revokeObjectURL(a.href);toast("已开始下载源码");
 };
-document.addEventListener("click",e=>{if(!e.target.closest(".enginewrap")&&!e.target.closest("#quickAddEngine"))$("#engineDropdown").classList.remove("open");if(!e.target.closest(".card"))document.querySelectorAll(".card.menu-open").forEach(c=>{c.classList.remove("menu-open");c.querySelector(".cardmenu").classList.remove("open")})});
+document.addEventListener("click",e=>{if(!e.target.closest(".enginewrap"))$("#engineDropdown").classList.remove("open");if(!e.target.closest(".card"))document.querySelectorAll(".card.menu-open").forEach(c=>{c.classList.remove("menu-open");c.querySelector(".cardmenu").classList.remove("open")})});
 $("#searchForm").onsubmit=e=>{e.preventDefault();const q=$("#searchInput").value.trim();if(!q)return;const engine=data.engines[data.activeEngine];window.open(engine.url.replace(/%s/g,encodeURIComponent(q)),"_blank","noopener")};
 render();
 </script>
