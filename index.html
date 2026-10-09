@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Orbit — Your personal launchpad</title>
+<style>
+:root{--blue:#1760f5;--bg:#f3f6fc;--ink:#20294b;--muted:#7b829b;--line:#e4e9f3;--card:#fff;--shadow:0 8px 22px rgba(36,61,112,.07)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font:14px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:var(--ink)}
+button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible{outline:2px solid #83a9ff;outline-offset:2px}
+.top{background:var(--blue);padding:22px 3.1% 48px;color:#fff}.brandrow{height:31px;display:flex;align-items:center;gap:8px;margin-left:100px}.brand{background:#fff;color:#46516c;border-radius:3px 3px 0 0;padding:6px 18px;font-weight:600;cursor:pointer}.tiny{border:0;background:#ffffff30;color:#fff;border-radius:3px;width:23px;height:23px}
+.searchbar{height:46px;background:white;display:flex;align-items:center;border-radius:2px;color:#5c6279;box-shadow:0 2px 5px #1646ad22}.enginewrap{position:relative;height:100%;display:flex;align-items:center;border-right:1px solid var(--line)}.enginebtn{border:0;background:white;color:#4e5571;padding:0 24px;height:100%;min-width:100px}.enginebtn:after{content:"⌄";padding-left:9px;color:#a1a7b7}.searchinput{border:0;outline:none;flex:1;min-width:0;padding:0 22px;color:#303852}.searchinput::placeholder{color:#b4bacb}.searchgo{height:26px;width:64px;border:0;border-left:1px solid var(--line);background:#fff;color:#888;font-size:22px}
+.dropdown{display:none;position:absolute;z-index:10;top:calc(100% + 8px);left:0;width:230px;background:#fff;border-radius:8px;padding:8px;box-shadow:0 12px 30px #17244a26;color:var(--ink)}.dropdown.open{display:block}.engineoption{display:flex;align-items:center;gap:8px;padding:9px;border-radius:5px;cursor:pointer}.engineoption:hover{background:#f1f5ff}.engineoption .engdel{margin-left:auto;border:0;background:none;color:#a4aabe}.engine-add{border:0;background:#f3f6ff;color:var(--blue);width:100%;padding:9px;border-radius:5px;margin-top:5px}
+main{padding:30px 3.1% 100px;min-height:calc(100vh - 150px)}.tabs{display:flex;align-items:center;gap:34px;margin:0 0 42px;min-height:38px}.tab{display:flex;align-items:center;gap:6px;padding:8px 4px;border:0;border-bottom:2px solid transparent;background:transparent;color:#424966;font-weight:500}.tab.active{color:var(--blue);border-bottom-color:var(--blue)}.tab .x{font-size:11px;color:#a2a8b9;display:none}.tab:hover .x{display:inline}.tab-add{border:0;background:transparent;color:#a8afc1;font-size:20px}.tab-add:hover{color:var(--blue)}.tabs .design-label{font-weight:600;margin-right:0}.tabs .divider{color:#c3c8d5;margin-left:-10px;margin-right:20px}
+.grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:26px}.card{height:89px;background:var(--card);border:1px solid transparent;border-radius:3px;box-shadow:var(--shadow);display:flex;align-items:center;padding:0 17px;gap:15px;position:relative;min-width:0;transition:transform .15s,box-shadow .15s;cursor:grab}.card:hover{box-shadow:0 10px 26px #263c7020;transform:translateY(-1px)}.card.dragging{opacity:.4}.card.drop-target{outline:2px dashed #6d99ff;outline-offset:2px}.favicon{width:34px;height:34px;border-radius:50%;object-fit:contain;flex-shrink:0;background:#f6f8fc}.fallback{width:34px;height:34px;flex-shrink:0;border-radius:50%;display:grid;place-items:center;color:#fff;font-size:13px;font-weight:700;background:var(--fb,#3679ff)}.cardtext{min-width:0;flex:1}.site-name{font-size:15px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:1px}.site-url{font-size:13px;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.more{border:0;background:transparent;color:#aab0c0;font-size:20px;padding:4px;align-self:flex-start;margin-top:7px;line-height:1}.more:hover{color:var(--blue)}.cardmenu{position:absolute;right:9px;top:34px;z-index:5;display:none;background:white;box-shadow:0 8px 24px #18264b25;border-radius:7px;padding:5px;width:115px}.cardmenu.open{display:block}.cardmenu button{display:block;width:100%;border:0;background:white;text-align:left;padding:8px;border-radius:4px;color:#505975}.cardmenu button:hover{background:#f2f5fc}.add-card{border:1px dashed #dce2ee;box-shadow:none;justify-content:center;color:#a8afbf;cursor:pointer}.add-card:hover{border-color:#9db9ff;color:var(--blue);transform:none}.add-card .plus{font-size:20px}.empty{padding:55px 15px;text-align:center;color:#9098af;background:#fff;border-radius:8px;display:none}
+.modalback{position:fixed;inset:0;background:#111a334d;display:none;align-items:center;justify-content:center;padding:18px;z-index:30}.modalback.open{display:flex}.modal{width:min(430px,100%);background:#fff;border-radius:14px;padding:24px;box-shadow:0 25px 70px #101d3a33}.modal h2{font-size:18px;margin:0 0 20px}.field{display:block;margin:14px 0}.field span{display:block;font-size:13px;color:#727b94;margin-bottom:6px}.field input,.field select{width:100%;height:42px;border:1px solid #dce2ef;border-radius:7px;padding:0 12px;background:white;color:var(--ink)}.modalactions{display:flex;justify-content:flex-end;gap:9px;margin-top:22px}.btn{border:0;border-radius:7px;padding:9px 15px;background:#eef2fa;color:#59627a}.btn.primary{background:var(--blue);color:white}.btn.danger{background:#fff0f0;color:#d33}.hint{color:#8d95a9;font-size:12px;margin-top:8px}.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#202944;color:white;padding:10px 16px;border-radius:8px;box-shadow:var(--shadow);display:none;z-index:40}
+@media(max-width:1250px){.grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}.tabs{margin-bottom:30px}}
+@media(max-width:900px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.top{padding-bottom:34px}.brandrow{margin-left:30px}}
+@media(max-width:620px){.top{padding:15px 14px 25px}.brandrow{margin-left:8px}.searchbar{height:44px}.enginebtn{min-width:80px;padding:0 10px}.searchinput{padding:0 10px}.searchgo{width:44px}main{padding:23px 14px 70px}.tabs{gap:17px;overflow-x:auto;margin-bottom:24px}.tabs .divider{margin:0 2px}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.card{height:78px;padding:0 10px;gap:9px}.favicon,.fallback{width:30px;height:30px}.site-name{font-size:13px}.site-url{font-size:11px}.more{margin-right:-6px}.tab{white-space:nowrap}}
+@media(max-width:360px){.grid{grid-template-columns:1fr}.card{height:74px}}
+</style>
+
+<style>
+:root{--blue:#6d5dfc;--bg:#f7f7f4;--ink:#20211f;--muted:#85877f;--line:#e9e9e3;--card:#fff;--shadow:0 3px 14px rgba(35,37,28,.035)}
+body{background:var(--bg);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"SF Pro Display","PingFang SC","Microsoft YaHei",sans-serif;letter-spacing:-.015em}
+.top{background:var(--bg);color:var(--ink);padding:25px 5.2% 0;border-bottom:1px solid #ecece6}
+.brandrow{margin:0 auto 26px;max-width:1440px;height:34px;gap:10px}
+.brand{background:transparent;color:#252620;padding:0;display:flex;align-items:center;gap:10px;font-size:20px;font-weight:750;letter-spacing:-.06em}
+.brand-mark{display:grid;place-items:center;background:#24251f;color:#d9ff68;border-radius:11px;width:32px;height:32px;font-size:21px;letter-spacing:0}
+.brand-dot{color:#a3d837}.top-actions{margin-left:auto;display:flex;align-items:center;gap:8px}.tiny{margin-left:0;background:#eceee6;color:#55594b;border-radius:50%;width:32px;height:32px;font-size:18px}.download-src{font-size:15px;font-weight:700}
+.searchbar{max-width:1440px;margin:0 auto 22px;height:54px;border:1px solid #e6e7df;border-radius:15px;background:#fff;box-shadow:0 4px 18px rgba(28,30,23,.035);overflow:visible}
+.enginewrap{border-right:1px solid #eee;padding-left:5px}.enginebtn{border-radius:12px 0 0 12px;font-weight:600;min-width:120px;color:#292b24}.enginebtn:after{color:#9a9d92}.searchinput{font-size:14px;padding:0 18px}.searchinput::placeholder{color:#b0b2aa}.searchgo{border:0;border-radius:0 15px 15px 0;width:58px;color:#56594d;font-size:23px}
+.dropdown{border:1px solid #eee;border-radius:12px}.engineoption{border-radius:8px}.engine-add{background:#f3f5ec;color:#4e5b28;border-radius:8px}
+main{max-width:1600px;margin:0 auto;padding:45px 5.2% 100px;min-height:calc(100vh - 170px)}
+.intro{margin:0 0 35px}.eyebrow{font-size:10px;font-weight:750;letter-spacing:.16em;color:#858879;display:flex;align-items:center;gap:8px;margin-bottom:13px}.live-dot{width:7px;height:7px;border-radius:50%;background:#a7d843;box-shadow:0 0 0 4px #a7d84322}
+.intro-row{display:flex;justify-content:space-between;align-items:flex-end;gap:20px}.intro h1{font-size:clamp(29px,3.1vw,43px);line-height:1.15;letter-spacing:-.065em;margin:0;font-weight:680}.intro h1 em{font-style:normal;color:#888b7c}.intro p{margin:12px 0 0;color:#85877f;font-size:14px;letter-spacing:0}.collection-count{display:flex;align-items:baseline;gap:8px;padding:0 0 5px;white-space:nowrap}.collection-count span{font-size:25px;font-weight:650;letter-spacing:-.06em}.collection-count small{font-size:12px;color:#92948b}
+.tabs{gap:8px;margin:0 0 26px;min-height:42px;flex-wrap:wrap}.tabs .design-label{font-size:12px;color:#989a90;font-weight:600;margin-right:12px}.tabs .divider{display:none}
+.tab{border:1px solid transparent;border-radius:999px;padding:9px 15px;color:#777a70;font-size:13px;background:transparent;transition:all .18s}.tab.active{background:#252620;color:#e3ff9a;border-color:#252620;box-shadow:0 3px 8px #22231c12}.tab .x{margin-left:5px;color:inherit}.tab-add{width:36px;height:36px;border:1px dashed #d6d8cd;border-radius:50%;font-size:18px;color:#797c70}
+.grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.card{height:100px;padding:0 17px;gap:13px;border:1px solid #ebebe5;border-radius:15px;box-shadow:0 2px 6px rgba(25,27,20,.018);transition:transform .2s,border-color .2s,box-shadow .2s}
+.card:hover{transform:translateY(-3px);border-color:#d7dfbf;box-shadow:0 12px 28px rgba(35,39,23,.07)}
+.favicon{width:39px;height:39px;border-radius:12px;background:#f5f6f0}
+.fallback{width:39px;height:39px;border-radius:12px;font-size:13px;color:#fff;background:var(--fb,#3679ff)}.site-name{font-size:14px;font-weight:650;letter-spacing:-.025em;margin-bottom:4px}.site-url{font-size:12px;color:#9a9c93;letter-spacing:0}
+.more{font-size:19px;color:#b6b8ad;border-radius:7px}.more:hover{background:#f1f2eb;color:#33352b}
+.cardmenu{border:1px solid #edeee7;border-radius:10px;box-shadow:0 12px 30px #20251a18}.cardmenu button{border-radius:7px;font-size:12px}
+.add-card{background:transparent;border:1px dashed #d9dbd0;box-shadow:none;color:#8e9185;gap:9px}.add-card:hover{background:#f0f2e9;border-color:#a8b78b;color:#4d5a2d}
+.modal{border-radius:18px}.field input,.field select{border-radius:10px}.btn{border-radius:9px}.btn.primary{background:#252620;color:#e3ff9a}
+.toast{border-radius:999px;background:#252620}
+@media(min-width:1450px){.grid{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media(max-width:1100px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:760px){.top{padding:18px 18px 0}.brandrow{margin-bottom:20px}.searchbar{height:49px;margin-bottom:17px}.enginebtn{min-width:88px;padding:0 12px}main{padding:32px 18px 70px}.intro{margin-bottom:27px}.intro-row{align-items:flex-start}.collection-count{display:none}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.card{height:86px;padding:0 11px;gap:9px}.favicon,.fallback{width:32px;height:32px}.tabs{gap:5px}.tab{padding:8px 12px}}
+@media(max-width:390px){.grid{grid-template-columns:1fr}.intro h1{font-size:29px}.site-name{font-size:14px}}
+</style>
+
+</head>
+<body>
+<header class="top">
+  <div class="brandrow"><div class="brand" title="Orbit 书签工作台"><span class="brand-mark">✳</span><span>orbit<span class="brand-dot">.</span></span></div><div class="top-actions"><button class="tiny" id="quickAddEngine" title="添加搜索引擎">＋</button><button class="tiny download-src" id="downloadSource" title="下载当前书签页源码" aria-label="下载当前书签页源码">↓</button></div></div>
+  <form class="searchbar" id="searchForm">
+    <div class="enginewrap"><button class="enginebtn" id="engineBtn" type="button">百度</button><div class="dropdown" id="engineDropdown"></div></div>
+    <input class="searchinput" id="searchInput" placeholder="输入搜索关键词" autocomplete="off">
+    <button class="searchgo" aria-label="搜索" type="submit">⌕</button>
+  </form>
+</header>
+<main>
+  <section class="intro">
+    <div class="eyebrow"><span class="live-dot"></span> YOUR PERSONAL SPACE</div>
+    <div class="intro-row"><div><h1>一处出发，<em>灵感随行。</em></h1><p>把常用的网站、工具与灵感，收进你的数字工作台。</p></div><div class="collection-count"><span id="siteCount">26</span><small>个快捷入口</small></div></div>
+  </section>
+  <nav class="tabs" id="tabs"></nav>
+  <section class="grid" id="grid"></section>
+  <div class="empty" id="empty">这个栏目还没有书签，点击“添加网站”创建第一个快捷入口。</div>
+</main>
+<div class="modalback" id="modalBack"><div class="modal" role="dialog" aria-modal="true"><h2 id="modalTitle">添加网站</h2><form id="editForm">
+  <label class="field"><span id="nameLabel">网站名称</span><input id="fieldName" required maxlength="60" placeholder="例如：Behance"></label>
+  <label class="field"><span>网址 / 搜索地址</span><input id="fieldUrl" required placeholder="https://example.com"></label>
+  <div class="hint" id="modalHint">网址可省略 https://，网站图标会尝试自动获取。</div>
+  <div class="modalactions"><button type="button" class="btn" id="cancelModal">取消</button><button type="submit" class="btn primary">保存</button></div>
+</form></div></div>
+<div class="toast" id="toast"></div>
+<script>
+const defaultData = {
+ engines:[
+  {name:"百度",url:"https://www.baidu.com/s?wd=%s"},
+  {name:"Google",url:"https://www.google.com/search?q=%s"},
+  {name:"必应",url:"https://www.bing.com/search?q=%s"},
+  {name:"搜狗",url:"https://www.sogou.com/web?query=%s"}
+ ],
+ activeEngine:0, activeTab:"常用",
+ tabs:[
+  {name:"常用",sites:[
+   ["Behance","https://www.behance.net"],["Dribbble","https://dribbble.com"],["站酷","https://www.zcool.com.cn"],["UI中国","https://www.ui.cn"],["优设网","https://www.uisdc.com"],
+   ["UIED","https://www.uied.cn"],["blender","https://www.blender.org"],["Discord","https://discord.com"],["Civitai","https://civitai.com"],["数字像素","https://www.dgtle.com"],
+   ["小红书","https://www.xiaohongshu.com"],["古田路9号","https://www.gtn9.com"],["东道品牌创意","https://www.dongdao.net"],["腾讯CDC","https://cdc.tencent.com"],["ISUX","https://isux.tencent.com"],
+   ["原创馆","https://www.yuanchuangguan.com"],["致设计","https://www.zhisheji.com"],["CND设计网","https://www.cndesign.com"],["C4D之家","https://www.c4d之家.com"],["screenlane","https://screenlane.com"],
+   ["设计之家","https://www.sj33.cn"],["力美","https://www.limei.com"],["UI人","https://uiren.com"],["W","https://www.w.org"],["68design","https://www.68design.net"],["土气集团官网","https://www.tuqi.com"]
+  ]},
+  {name:"设计",sites:[["Awwwards","https://www.awwwards.com"],["Pinterest","https://www.pinterest.com"],["Figma","https://www.figma.com"]]},
+  {name:"艺术",sites:[["ArtStation","https://www.artstation.com"],["Are.na","https://www.are.na"],["The Met","https://www.metmuseum.org"]]}
+ ]
+};
+let data;
+try{data=JSON.parse(localStorage.getItem("bookmarkNavData"))||structuredClone(defaultData)}catch(e){data=structuredClone(defaultData)}
+let modalMode="site", editIndex=-1, dragFrom=-1;
+const $=s=>document.querySelector(s);
+const save=()=>localStorage.setItem("bookmarkNavData",JSON.stringify(data));
+const safeUrl=u=>/^https?:\/\//i.test(u)?u:"https://"+u;
+const hostname=u=>{try{return new URL(safeUrl(u)).hostname.replace(/^www\./,"")}catch{return u}};
+const iconUrl=u=>{try{return "https://www.google.com/s2/favicons?domain_url="+encodeURIComponent(safeUrl(u))+"&sz=64"}catch{return ""}};
+const hashHue=s=>{let h=0;for(let c of s)h=(h*31+c.charCodeAt(0))>>>0;return h};
+const initials=name=>{const s=(name||"?").trim()||"?";return /[\u4e00-\u9fff]/.test(s[0])?s.slice(0,1):s.slice(0,2).toUpperCase()};
+const fallbackBg=name=>{const n=hashHue(name||"?");const hue=n%360;const a=`hsl(${hue} 72% 46%)`,b=`hsl(${(hue+38)%360} 70% 42%)`;return [a,`linear-gradient(135deg, hsl(${hue} 80% 52%), ${b})`,`linear-gradient(160deg, hsl(${hue} 65% 38%), hsl(${(hue+22)%360} 75% 54%))`,`linear-gradient(90deg, ${a} 50%, hsl(${(hue+28)%360} 70% 50%) 50%)`][n%4]};
+function toast(s){const t=$("#toast");t.textContent=s;t.style.display="block";clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.style.display="none",2000)}
+function renderEngines(){
+ const d=$("#engineDropdown");d.innerHTML="";
+ data.engines.forEach((e,i)=>{const row=document.createElement("div");row.className="engineoption";row.innerHTML=`<span>${i===data.activeEngine?"✓":"⌕"}</span><span class="engine-label"></span><button class="engdel" title="删除搜索引擎">×</button>`;row.querySelector(".engine-label").textContent=e.name;row.addEventListener("click",ev=>{if(ev.target.closest(".engdel")){ev.stopPropagation();if(data.engines.length===1)return toast("至少保留一个搜索引擎");data.engines.splice(i,1);if(data.activeEngine>=data.engines.length)data.activeEngine=0;save();renderEngines();return}data.activeEngine=i;save();$("#engineBtn").textContent=e.name;d.classList.remove("open")});row.querySelector(".engdel").title="删除 "+e.name;d.appendChild(row)});
+ const add=document.createElement("button");add.className="engine-add";add.textContent="＋ 添加搜索引擎";add.onclick=()=>openModal("engine");d.appendChild(add);
+ $("#engineBtn").textContent=data.engines[data.activeEngine]?.name||"搜索";
+}
+function renderTabs(){
+ const nav=$("#tabs");nav.innerHTML="";
+ const label=document.createElement("span");label.className="design-label";label.textContent="设计";nav.appendChild(label);
+ const sep=document.createElement("span");sep.className="divider";sep.textContent="|";nav.appendChild(sep);
+ data.tabs.forEach((tab,i)=>{const b=document.createElement("button");b.className="tab"+(tab.name===data.activeTab?" active":"");b.textContent=tab.name;
+  b.onclick=()=>{data.activeTab=tab.name;save();render()};b.title="点击切换；悬停可删除栏目";
+  if(data.tabs.length>1){const x=document.createElement("span");x.className="x";x.textContent="×";x.title="删除栏目";x.onclick=ev=>{ev.stopPropagation();if(!confirm(`删除“${tab.name}”栏目及其中所有书签？`))return;data.tabs.splice(i,1);if(data.activeTab===tab.name)data.activeTab=data.tabs[0].name;save();render()};b.appendChild(x)}
+  nav.appendChild(b)});
+ const add=document.createElement("button");add.className="tab-add";add.textContent="＋";add.title="添加书签栏目";add.onclick=()=>{const name=prompt("请输入新栏目名称");if(!name||!name.trim())return;const n=name.trim();if(data.tabs.some(t=>t.name===n))return toast("栏目名称已存在");data.tabs.push({name:n,sites:[]});data.activeTab=n;save();render()};nav.appendChild(add);
+}
+function renderGrid(){
+ const grid=$("#grid");grid.innerHTML="";const tab=data.tabs.find(t=>t.name===data.activeTab)||data.tabs[0];if(!tab)return;
+ tab.sites.forEach((site,i)=>{
+  const [name,url]=site;const card=document.createElement("article");card.className="card";card.draggable=true;card.dataset.index=i;
+  const fallback=document.createElement("div");fallback.className="fallback";fallback.textContent=initials(name);fallback.style.setProperty("--fb",fallbackBg(name));
+  const img=document.createElement("img");img.className="favicon";img.alt="";img.loading="lazy";img.src=iconUrl(url);img.onerror=()=>{if(img.parentNode)img.replaceWith(fallback)};
+  const txt=document.createElement("div");txt.className="cardtext";const title=document.createElement("div");title.className="site-name";title.textContent=name;const sub=document.createElement("div");sub.className="site-url";sub.textContent=hostname(url);txt.append(title,sub);
+  const more=document.createElement("button");more.className="more";more.textContent="⋮";more.title="书签操作";more.draggable=false;
+  const menu=document.createElement("div");menu.className="cardmenu";
+  [["打开网站",()=>window.open(safeUrl(url),"_blank","noopener")],["编辑",()=>openModal("site",i)],["删除",()=>{if(confirm(`删除书签“${name}”？`)){tab.sites.splice(i,1);save();renderGrid()}}]].forEach(([label,fn])=>{const b=document.createElement("button");b.textContent=label;b.onclick=ev=>{ev.stopPropagation();menu.classList.remove("open");fn()};menu.appendChild(b)});
+  more.onclick=ev=>{ev.stopPropagation();document.querySelectorAll(".cardmenu.open").forEach(m=>{if(m!==menu)m.classList.remove("open")});menu.classList.toggle("open")};
+  card.append(img,txt,more,menu);card.onclick=ev=>{if(!ev.target.closest("button"))window.open(safeUrl(url),"_blank","noopener")};
+  card.addEventListener("dragstart",e=>{dragFrom=i;card.classList.add("dragging");e.dataTransfer.effectAllowed="move";e.dataTransfer.setData("text/plain",String(i))});
+  card.addEventListener("dragend",()=>{card.classList.remove("dragging");document.querySelectorAll(".drop-target").forEach(n=>n.classList.remove("drop-target"))});
+  card.addEventListener("dragover",e=>{e.preventDefault();card.classList.add("drop-target")});
+  card.addEventListener("dragleave",()=>card.classList.remove("drop-target"));
+  card.addEventListener("drop",e=>{e.preventDefault();card.classList.remove("drop-target");const from=dragFrom,to=i;if(from<0||from===to)return;const moved=tab.sites.splice(from,1)[0];tab.sites.splice(to,0,moved);dragFrom=-1;save();renderGrid()});
+  grid.appendChild(card);
+ });
+ const add=document.createElement("button");add.className="card add-card";add.innerHTML='<span class="plus">＋</span><span>添加网站</span>';add.onclick=()=>openModal("site");grid.appendChild(add);
+ $("#empty").style.display=tab.sites.length?"none":"block";
+}
+function render(){renderEngines();renderTabs();renderGrid()}
+function openModal(mode,index=-1){
+ modalMode=mode;editIndex=index;$("#editForm").reset();$("#modalBack").classList.add("open");
+ if(mode==="site"){const tab=data.tabs.find(t=>t.name===data.activeTab);$("#modalTitle").textContent=index<0?"添加网站":"编辑书签";$("#nameLabel").textContent="网站名称";$("#modalHint").textContent="网址可省略 https://，网站图标会尝试自动获取。";if(index>=0){$("#fieldName").value=tab.sites[index][0];$("#fieldUrl").value=tab.sites[index][1]}}
+ else{$("#modalTitle").textContent="添加搜索引擎";$("#nameLabel").textContent="搜索引擎名称";$("#modalHint").textContent="搜索地址请使用 %s 作为关键词占位符，例如 https://www.google.com/search?q=%s";$("#fieldUrl").placeholder="https://example.com/search?q=%s"}
+ setTimeout(()=>$("#fieldName").focus(),50);
+}
+function closeModal(){$("#modalBack").classList.remove("open")}
+$("#cancelModal").onclick=closeModal;$("#modalBack").addEventListener("click",e=>{if(e.target===$("#modalBack"))closeModal()});
+$("#editForm").onsubmit=e=>{e.preventDefault();const name=$("#fieldName").value.trim(),url=$("#fieldUrl").value.trim();if(!name||!url)return;
+ if(modalMode==="site"){const tab=data.tabs.find(t=>t.name===data.activeTab);const val=[name,safeUrl(url)];if(editIndex<0)tab.sites.push(val);else tab.sites[editIndex]=val}
+ else{if(!url.includes("%s"))return toast("搜索地址需要包含 %s 关键词占位符");data.engines.push({name,url});data.activeEngine=data.engines.length-1}
+ save();closeModal();render();toast("已保存");
+};
+$("#engineBtn").onclick=()=>$("#engineDropdown").classList.toggle("open");
+$("#quickAddEngine").onclick=()=>openModal("engine");
+$("#downloadSource").onclick=()=>{
+ const inject=`try{data=JSON.parse(localStorage.getItem("bookmarkNavData"))||structuredClone(defaultData)}catch(e){data=structuredClone(defaultData)}`;
+ const payload=JSON.stringify(data);
+ const baked=`try{data=JSON.parse(localStorage.getItem("bookmarkNavData"))||${payload}}catch(e){data=${payload}}localStorage.setItem("bookmarkNavData",JSON.stringify(data));`;
+ const html="<!doctype html>\n"+document.documentElement.outerHTML.replace(inject,baked);
+ const blob=new Blob([html],{type:"text/html;charset=utf-8"});
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="orbit-bookmarks.html";a.click();URL.revokeObjectURL(a.href);toast("已开始下载源码");
+};
+document.addEventListener("click",e=>{if(!e.target.closest(".enginewrap")&&!e.target.closest("#quickAddEngine"))$("#engineDropdown").classList.remove("open");if(!e.target.closest(".card"))document.querySelectorAll(".cardmenu.open").forEach(m=>m.classList.remove("open"))});
+$("#searchForm").onsubmit=e=>{e.preventDefault();const q=$("#searchInput").value.trim();if(!q)return;const engine=data.engines[data.activeEngine];window.open(engine.url.replace(/%s/g,encodeURIComponent(q)),"_blank","noopener")};
+render();
+</script>
+
+<script>
+(function(){
+ const count=()=>{const tab=window.__unused;const el=document.getElementById('siteCount');if(!el)return;
+   try{const raw=JSON.parse(localStorage.getItem('bookmarkNavData'));const active=raw&&raw.tabs.find(t=>t.name===raw.activeTab);el.textContent=active?active.sites.length:0}catch(e){el.textContent='—'}
+ };
+ const originalRender=window.render;
+ // Observe DOM changes so the small count stays in sync with category changes.
+ const grid=document.getElementById('grid');if(grid){new MutationObserver(count).observe(grid,{childList:true});}
+ const tabs=document.getElementById('tabs');if(tabs){new MutationObserver(count).observe(tabs,{childList:true,subtree:true});}
+ count();
+})();
+</script>
+
+</body></html>
