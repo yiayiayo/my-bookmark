@@ -97,6 +97,7 @@ html{scroll-behavior:smooth}
 </style>
 <base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
 <header class="top">
@@ -104,7 +105,7 @@ html{scroll-behavior:smooth}
 <button class="tiny" id="importConfig" title="导入配置" aria-label="导入配置">⤒</button>
 <button class="tiny" id="exportConfig" title="导出配置" aria-label="导出配置">⤓</button></div></div>
   <form class="searchbar" id="searchForm">
-    <div class="enginewrap"><button class="enginebtn" id="engineBtn" type="button">百度</button><div class="dropdown" id="engineDropdown"><div class="engineoption"><span class="engmark">⌕</span><span class="engine-label">搜狗</span><button class="engdel" title="删除 搜狗">×</button></div><div class="engineoption"><span class="engmark">⌕</span><span class="engine-label">百度</span><button class="engdel" title="删除 百度">×</button></div><button class="engine-add">＋ 添加搜索引擎</button></div></div>
+    <div class="enginewrap"><button class="enginebtn" id="engineBtn" type="button">百度</button><div class="dropdown" id="engineDropdown"><div class="engineoption"><span class="engmark">⌕</span><span class="engine-label">搜狗</span><button type="button" class="engdel" title="删除 搜狗">×</button></div><div class="engineoption"><span class="engmark">⌕</span><span class="engine-label">百度</span><button type="button" class="engdel" title="删除 百度">×</button></div><button type="button" class="engine-add">＋ 添加搜索引擎</button></div></div>
     <input class="searchinput" id="searchInput" placeholder="输入搜索关键词" autocomplete="off">
     <button class="searchgo" aria-label="搜索" type="submit">⌕</button>
   </form>
@@ -156,8 +157,8 @@ const fallbackBg=name=>{const n=hashHue(name||"?");const hue=n%360;const a=`hsl(
 function toast(s){const t=$("#toast");t.textContent=s;t.style.display="block";clearTimeout(toast.timer);toast.timer=setTimeout(()=>t.style.display="none",2000)}
 function renderEngines(){
  const d=$("#engineDropdown");d.innerHTML="";
- data.engines.forEach((e,i)=>{const row=document.createElement("div");row.className="engineoption"+(i===data.activeEngine?" active-mark":"");row.innerHTML=`<span class="engmark">⌕</span><span class="engine-label"></span><button class="engdel" title="删除搜索引擎">×</button>`;row.querySelector(".engine-label").textContent=e.name;row.addEventListener("click",async ev=>{if(ev.target.closest(".engdel")){ev.stopPropagation();if(data.engines.length===1)return toast("至少保留一个搜索引擎");const ok=await openDialog({title:"删除搜索引擎",msg:`确定删除搜索引擎 <strong>“${e.name}”</strong> 吗？`,okText:"删除",danger:true});if(!ok)return;data.engines.splice(i,1);if(data.activeEngine>=data.engines.length)data.activeEngine=0;save();renderEngines();return}data.activeEngine=i;save();$("#engineBtn").textContent=e.name;d.classList.remove("open")});row.querySelector(".engdel").title="删除 "+e.name;d.appendChild(row)});
- const add=document.createElement("button");add.className="engine-add";add.textContent="＋ 添加搜索引擎";add.onclick=()=>openModal("engine");d.appendChild(add);
+ data.engines.forEach((e,i)=>{const row=document.createElement("div");row.className="engineoption"+(i===data.activeEngine?" active-mark":"");row.innerHTML=`<span class="engmark">⌕</span><span class="engine-label"></span><button type="button" class="engdel" title="删除搜索引擎">×</button>`;row.querySelector(".engine-label").textContent=e.name;row.addEventListener("click",async ev=>{if(ev.target.closest(".engdel")){ev.stopPropagation();if(data.engines.length===1)return toast("至少保留一个搜索引擎");const ok=await openDialog({title:"删除搜索引擎",msg:`确定删除搜索引擎 <strong>“${e.name}”</strong> 吗？`,okText:"删除",danger:true});if(!ok)return;data.engines.splice(i,1);if(data.activeEngine>=data.engines.length)data.activeEngine=0;save();renderEngines();return}data.activeEngine=i;save();$("#engineBtn").textContent=e.name;d.classList.remove("open")});row.querySelector(".engdel").title="删除 "+e.name;d.appendChild(row)});
+ const add=document.createElement("button");add.className="engine-add";add.type="button";add.textContent="＋ 添加搜索引擎";add.onclick=()=>openModal("engine");d.appendChild(add);
  $("#engineBtn").textContent=data.engines[data.activeEngine]?.name||"搜索";
 }
 function renderTabs(){
