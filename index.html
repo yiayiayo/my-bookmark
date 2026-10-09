@@ -98,10 +98,13 @@ html{scroll-behavior:smooth}
 <base target="_blank">
 <style data-id="immersive-translate-input-injected-css"></style><base target="_blank">
 <base target="_blank">
+<base target="_blank">
 </head>
 <body>
 <header class="top">
-  <div class="brandrow"><div class="brand" title="yiayiayo 书签工作台"><span class="brand-mark">✳</span><span>yiayiayo<span class="brand-dot">.</span></span></div><div class="top-actions"><button class="tiny" id="clearCache" title="清除页面缓存" aria-label="清除页面缓存">⌫</button><button class="tiny download-src" id="downloadSource" title="下载当前书签页源码" aria-label="下载当前书签页源码">↓</button></div></div>
+  <div class="brandrow"><div class="brand" title="yiayiayo 书签工作台"><span class="brand-mark">✳</span><span>yiayiayo<span class="brand-dot">.</span></span></div><div class="top-actions"><input type="file" id="importFile" accept=".json,application/json" style="display:none">
+<button class="tiny" id="importConfig" title="导入配置" aria-label="导入配置">⤒</button>
+<button class="tiny" id="exportConfig" title="导出配置" aria-label="导出配置">⤓</button></div></div>
   <form class="searchbar" id="searchForm">
     <div class="enginewrap"><button class="enginebtn" id="engineBtn" type="button">百度</button><div class="dropdown" id="engineDropdown"><div class="engineoption"><span class="engmark">⌕</span><span class="engine-label">搜狗</span><button class="engdel" title="删除 搜狗">×</button></div><div class="engineoption"><span class="engmark">⌕</span><span class="engine-label">百度</span><button class="engdel" title="删除 百度">×</button></div><button class="engine-add">＋ 添加搜索引擎</button></div></div>
     <input class="searchinput" id="searchInput" placeholder="输入搜索关键词" autocomplete="off">
@@ -138,12 +141,7 @@ const defaultData = {
  tabs:[
   {name:"常用",sites:[
    ["Behance","https://www.behance.net"],["Dribbble","https://dribbble.com"],["站酷","https://www.zcool.com.cn"],["UI中国","https://www.ui.cn"],["优设网","https://www.uisdc.com"],
-   ["UIED","https://www.uied.cn"],["blender","https://www.blender.org"],["Discord","https://discord.com"],["Civitai","https://civitai.com"],["数字像素","https://www.dgtle.com"],
-   ["小红书","https://www.xiaohongshu.com"],["古田路9号","https://www.gtn9.com"],["东道品牌创意","https://www.dongdao.net"],["腾讯CDC","https://cdc.tencent.com"],["ISUX","https://isux.tencent.com"],
-   ["原创馆","https://www.yuanchuangguan.com"],["致设计","https://www.zhisheji.com"],["CND设计网","https://www.cndesign.com"],["C4D之家","https://www.c4d之家.com"],["screenlane","https://screenlane.com"],
-   ["设计之家","https://www.sj33.cn"],["力美","https://www.limei.com"],["UI人","https://uiren.com"],["W","https://www.w.org"],["68design","https://www.68design.net"],["土气集团官网","https://www.tuqi.com"]
-  ]},
-  {name:"设计",sites:[["Awwwards","https://www.awwwards.com"],["Pinterest","https://www.pinterest.com"],["Figma","https://www.figma.com"]]},
+  },
   {name:"艺术",sites:[["ArtStation","https://www.artstation.com"],["Are.na","https://www.are.na"],["The Met","https://www.metmuseum.org"]]}
  ]
 };
@@ -228,15 +226,36 @@ $("#editForm").onsubmit=e=>{e.preventDefault();const name=$("#fieldName").value.
  save();closeModal();render();toast("已保存");
 };
 $("#engineBtn").onclick=()=>$("#engineDropdown").classList.toggle("open");
-$("#clearCache").onclick=async()=>{const ok=await openDialog({title:"清除页面缓存",msg:"确定清除 <strong>页面缓存</strong> 吗？<br>书签、栏目和搜索引擎设置将恢复为默认。",okText:"清除",danger:true});if(!ok)return;localStorage.removeItem("bookmarkNavData");toast("缓存已清除，即将恢复默认");setTimeout(()=>location.reload(),800)};
-
-$("#downloadSource").onclick=()=>{
- const inject=`try{data=JSON.parse(localStorage.getItem("bookmarkNavData"))||structuredClone(defaultData)}catch(e){data=structuredClone(defaultData)}`;
- const payload=JSON.stringify(data);
- const baked=`try{data=JSON.parse(localStorage.getItem("bookmarkNavData"))||${payload}}catch(e){data=${payload}}localStorage.setItem("bookmarkNavData",JSON.stringify(data));`;
- const html="<!doctype html>\n"+document.documentElement.outerHTML.replace(inject,baked);
- const blob=new Blob([html],{type:"text/html;charset=utf-8"});
- const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="orbit-bookmarks.html";a.click();URL.revokeObjectURL(a.href);toast("已开始下载源码");
+$("#exportConfig").onclick=()=>{
+ const payload={version:1,exportedAt:new Date().toISOString(),engines:data.engines,activeEngine:data.activeEngine,activeTab:data.activeTab,tabs:data.tabs};
+ const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json;charset=utf-8"});
+ const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="yiayiayo-config.json";a.click();URL.revokeObjectURL(a.href);toast("已导出配置文件");
+};
+$("#importConfig").onclick=async()=>{
+ const ok=await openDialog({title:"导入配置",msg:"确定从 <strong>配置文件</strong> 导入吗？<br>当前的搜索引擎、栏目和书签将被覆盖。",okText:"选择文件",danger:true});if(!ok)return;
+ $("#importFile").click();
+};
+$("#importFile").onchange=async e=>{
+ const file=e.target.files[0];e.target.value="";if(!file)return;
+ try{
+  const cfg=JSON.parse(await file.text());
+  if(!cfg||!Array.isArray(cfg.engines)||!Array.isArray(cfg.tabs))throw new Error("格式不正确");
+  const cleanUrl=u=>{u=String(u||"").trim();return /^https?:\/\//i.test(u)?u:"https://"+u};
+  const engines=cfg.engines.filter(en=>en&&en.name&&en.url).map(en=>({name:String(en.name).slice(0,30),url:String(en.url)}));
+  if(!engines.length)throw new Error("搜索引擎为空");
+  const tabs=(Array.isArray(cfg.tabs)?cfg.tabs:[]).filter(t=>t&&t.name).map(t=>{
+   const sites=(Array.isArray(t.sites)?t.sites:[]).filter(s=>s&&s[0]&&s[1]).map(s=>[String(s[0]).slice(0,60),cleanUrl(s[1]),["auto","ico","letter"].includes(s[2])?s[2]:"auto"]);
+   return {name:String(t.name).slice(0,30),sites};
+  });
+  if(!tabs.length)throw new Error("书签栏目为空");
+  const ok2=await openDialog({title:"确认导入",msg:`检测到 <strong>${engines.length}</strong> 个搜索引擎、<strong>${tabs.length}</strong> 个栏目（共 <strong>${tabs.reduce((n,t)=>n+t.sites.length,0)}</strong> 个书签）。<br>确定导入并覆盖当前配置吗？`,okText:"导入",danger:true});
+  if(!ok2)return;
+  data.engines=engines;
+  data.activeEngine=Math.min(Math.max(0,Number(cfg.activeEngine)||0),engines.length-1);
+  data.tabs=tabs;
+  data.activeTab=tabs.some(t=>t.name===cfg.activeTab)?cfg.activeTab:tabs[0].name;
+  save();render();toast("配置已导入");
+ }catch(err){toast("导入失败："+(err.message||"文件无法解析"))}
 };
 document.addEventListener("click",e=>{if(!e.target.closest(".enginewrap"))$("#engineDropdown").classList.remove("open");if(!e.target.closest(".card"))document.querySelectorAll(".card.menu-open").forEach(c=>{c.classList.remove("menu-open");c.querySelector(".cardmenu").classList.remove("open")})});
 $("#searchForm").onsubmit=e=>{e.preventDefault();const q=$("#searchInput").value.trim();if(!q)return;const engine=data.engines[data.activeEngine];window.open(engine.url.replace(/%s/g,encodeURIComponent(q)),"_blank","noopener")};
