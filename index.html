@@ -94,6 +94,72 @@ html{scroll-behavior:smooth}
 .tab.dragging{opacity:.4;cursor:grabbing}
 .tab.drop-target{border:1.5px dashed #a8b78b;background:#f0f2e9;color:#4d5a2d;box-shadow:none}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+/* ===== 带文案的操作按钮 & 主题切换 ===== */
+.action-btn{display:inline-flex;align-items:center;gap:6px;border:0;background:#eceee6;color:#55594b;border-radius:999px;height:32px;padding:0 13px;font-size:12.5px;font-weight:600;white-space:nowrap;transition:background .18s,color .18s}
+.action-btn:hover{background:#e0e3d6;color:#33352b}
+.theme-toggle{font-size:16px;transition:transform .3s}
+.theme-toggle:hover{transform:rotate(18deg)}
+/* ===== 打字机 ===== */
+.typewriter .caret{display:inline-block;width:3px;height:.85em;margin-left:4px;background:currentColor;vertical-align:-.06em;animation:blink 1.05s steps(1) infinite}
+@keyframes blink{0%,55%{opacity:1}56%,100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.typewriter .caret{animation:none}}
+/* ===== 深色模式 ===== */
+html[data-theme="dark"]{--bg:#15160f;--ink:#e8eadf;--muted:#9a9d92;--line:#2b2d24;--card:#1f2019;--shadow:0 8px 22px rgba(0,0,0,.35);color-scheme:dark}
+html[data-theme="dark"] ::-webkit-scrollbar-thumb{background:#3a3d32;border-color:#15160f}
+html[data-theme="dark"] .top{border-bottom-color:#26281f}
+html[data-theme="dark"] .brand{color:#e8eadf}
+html[data-theme="dark"] .brand-mark{background:#d9ff68;color:#24251f}
+html[data-theme="dark"] .tiny,html[data-theme="dark"] .action-btn{background:#26281f;color:#c4c7ba}
+html[data-theme="dark"] .tiny:hover{background:#31342a;color:#eef0e4}
+html[data-theme="dark"] .action-btn:hover{background:#31342a;color:#eef0e4}
+html[data-theme="dark"] .searchbar{background:#1f2019;border-color:#2c2e25;box-shadow:0 4px 18px rgba(0,0,0,.3)}
+html[data-theme="dark"] .enginewrap{border-right-color:#2c2e25}
+html[data-theme="dark"] .enginebtn{background:transparent;color:#e3e5d8}
+html[data-theme="dark"] .enginebtn:hover{background:#26281f}
+html[data-theme="dark"] .enginebtn:after{color:#6d7064}
+html[data-theme="dark"] .searchinput{background:transparent;color:#e8eadf}
+html[data-theme="dark"] .searchinput::placeholder{color:#6d7064}
+html[data-theme="dark"] .searchgo{background:transparent;border-left-color:#2c2e25;color:#a9ac9e}
+html[data-theme="dark"] .searchbar:focus-within{border-color:#56622f;box-shadow:0 0 0 4px #a7d84314,0 6px 22px rgba(0,0,0,.4)}
+html[data-theme="dark"] .dropdown{background:#1f2019;border-color:#2c2e25;box-shadow:0 12px 30px rgba(0,0,0,.45);color:#e8eadf}
+html[data-theme="dark"] .engineoption:hover{background:#26281f}
+html[data-theme="dark"] .engineoption .engmark{color:#c4c7ba}
+html[data-theme="dark"] .engineoption .engdel{color:#7d8073}
+html[data-theme="dark"] .engine-add{background:#26281f;color:#b8d96a}
+html[data-theme="dark"] .tabs{background:var(--bg)}
+html[data-theme="dark"] .tab{color:#a0a396}
+html[data-theme="dark"] .tab.active{background:#d9ff68;color:#24251f;border-color:#d9ff68}
+html[data-theme="dark"] .tab-add{border-color:#3a3d32;color:#8a8d80}
+html[data-theme="dark"] .tab.drop-target{border-color:#a8b78b;background:#26281f;color:#b8d96a}
+html[data-theme="dark"] .card{background:var(--card);border-color:#2b2d24;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+html[data-theme="dark"] .card:hover{border-color:#4a5530;box-shadow:0 12px 28px rgba(0,0,0,.4)}
+html[data-theme="dark"] .favicon{background:#26281f}
+html[data-theme="dark"] .favicon,html[data-theme="dark"] .fallback{box-shadow:inset 0 0 0 1px #33352b}
+html[data-theme="dark"] .site-url{color:#8a8d80}
+html[data-theme="dark"] .more{color:#7d8073}
+html[data-theme="dark"] .more:hover{background:#26281f;color:#e8eadf}
+html[data-theme="dark"] .cardmenu{background:#1f2019;border-color:#2c2e25;box-shadow:0 12px 30px rgba(0,0,0,.5)}
+html[data-theme="dark"] .cardmenu button{background:#1f2019;color:#c4c7ba}
+html[data-theme="dark"] .cardmenu button:hover{background:#26281f}
+html[data-theme="dark"] .cardmenu button.danger{color:#e07a7a}
+html[data-theme="dark"] .cardmenu button.danger:hover{background:#3a2222}
+html[data-theme="dark"] .add-card{background:transparent;border-color:#3a3d32;color:#8a8d80}
+html[data-theme="dark"] .add-card:hover{background:#22241c;border-color:#56622f;color:#b8d96a}
+html[data-theme="dark"] #empty{border-color:#3a3d32;color:#8a8d80}
+html[data-theme="dark"] .intro h1 em{color:#9a9d92}
+html[data-theme="dark"] .intro p,html[data-theme="dark"] .eyebrow{color:#8a8d80}
+html[data-theme="dark"] .collection-count small{color:#8a8d80}
+html[data-theme="dark"] .modal,html[data-theme="dark"] .dialog{background:#1f2019;box-shadow:0 25px 70px rgba(0,0,0,.55)}
+html[data-theme="dark"] .field span{color:#a0a396}
+html[data-theme="dark"] .field input,html[data-theme="dark"] .field select,html[data-theme="dark"] .dialog input,html[data-theme="dark"] #dialogSelect{background:#15160f!important;border-color:#33352b!important;color:#e8eadf}
+html[data-theme="dark"] .dialog .dialogmsg{color:#a0a396}
+html[data-theme="dark"] .btn{background:#26281f;color:#c4c7ba}
+html[data-theme="dark"] .btn.primary{background:#d9ff68;color:#24251f}
+html[data-theme="dark"] .btn.danger{background:#3a2222;color:#e88}
+html[data-theme="dark"] .hint{color:#7d8073}
+html[data-theme="dark"] .toast{background:#d9ff68;color:#24251f}
+html[data-theme="dark"] .modalback,html[data-theme="dark"] .dialogback{background:rgba(0,0,0,.6)}
+body{transition:background-color .25s ease,color .25s ease}
 </style>
 <base target="_blank">
 <base target="_blank">
@@ -102,8 +168,9 @@ html{scroll-behavior:smooth}
 <body>
 <header class="top">
   <div class="brandrow"><div class="brand" title="yiayiayo 书签工作台"><span class="brand-mark">✳</span><span>yiayiayo<span class="brand-dot">.</span></span></div><div class="top-actions"><input type="file" id="importFile" accept=".json,application/json" style="display:none">
-<button class="tiny" id="importConfig" title="导入配置" aria-label="导入配置">⤒</button>
-<button class="tiny" id="exportConfig" title="导出配置" aria-label="导出配置">⤓</button></div></div>
+<button class="action-btn" id="importConfig" title="导入配置">⤒<span>导入配置</span></button>
+<button class="action-btn" id="exportConfig" title="导出配置">⤓<span>导出配置</span></button>
+<button class="tiny theme-toggle" id="themeToggle" title="切换深色 / 浅色模式" aria-label="切换深色 / 浅色模式">☾</button></div></div>
   <form class="searchbar" id="searchForm">
     <div class="enginewrap"><button class="enginebtn" id="engineBtn" type="button">百度</button><div class="dropdown" id="engineDropdown"><div class="engineoption"><span class="engmark">⌕</span><span class="engine-label">搜狗</span><button type="button" class="engdel" title="删除 搜狗">×</button></div><div class="engineoption"><span class="engmark">⌕</span><span class="engine-label">百度</span><button type="button" class="engdel" title="删除 百度">×</button></div><button type="button" class="engine-add">＋ 添加搜索引擎</button></div></div>
     <input class="searchinput" id="searchInput" placeholder="输入搜索关键词" autocomplete="off">
@@ -113,7 +180,7 @@ html{scroll-behavior:smooth}
 <main>
   <section class="intro">
     <div class="eyebrow"><span class="live-dot"></span> YOUR PERSONAL SPACE</div>
-    <div class="intro-row"><div><h1>一起出发，<em>灵感随行。</em></h1><p>把常用的网站、工具与灵感，收进你的数字工作台。</p></div><div class="collection-count"><span id="siteCount">9</span><small>个快捷入口</small></div></div>
+    <div class="intro-row"><div><h1 class="typewriter" aria-label="一起出发，灵感随行。"><span id="typeA">一起出发，</span><em id="typeB">灵感随行。</em><span class="caret" id="typeCaret" aria-hidden="true"></span></h1><p>把常用的网站、工具与灵感，收进你的数字工作台。</p></div><div class="collection-count"><span id="siteCount">9</span><small>个快捷入口</small></div></div>
   </section>
   <nav class="tabs" id="tabs"><button class="tab active" title="点击切换栏目；悬停可删除；拖拽可排序" draggable="true">常用<span class="x" title="删除栏目">×</span></button><button class="tab" title="点击切换栏目；悬停可删除；拖拽可排序" draggable="true">设计<span class="x" title="删除栏目">×</span></button><button class="tab" title="点击切换栏目；悬停可删除；拖拽可排序" draggable="true">艺术<span class="x" title="删除栏目">×</span></button><button class="tab-add" title="添加书签栏目">＋</button></nav>
   <section class="grid" id="grid"><article class="card" draggable="true" data-index="0"><img class="favicon" alt="" loading="lazy" src="https://www.google.com/s2/favicons?domain_url=https%3A%2F%2Fwww.behance.net&amp;sz=64"><div class="cardtext"><div class="site-name">Behance</div><div class="site-url">behance.net</div></div><button class="more" title="书签操作" draggable="false">⋮</button><div class="cardmenu"><button>打开网站</button><button>编辑</button><button class="danger">删除</button></div></article><article class="card" draggable="true" data-index="1"><img class="favicon" alt="" loading="lazy" src="https://www.google.com/s2/favicons?domain_url=https%3A%2F%2Fdribbble.com&amp;sz=64"><div class="cardtext"><div class="site-name">Dribbble</div><div class="site-url">dribbble.com</div></div><button class="more" title="书签操作" draggable="false">⋮</button><div class="cardmenu"><button>打开网站</button><button>编辑</button><button class="danger">删除</button></div></article><article class="card" draggable="true" data-index="2"><img class="favicon" alt="" loading="lazy" src="https://www.google.com/s2/favicons?domain_url=https%3A%2F%2Fwww.zcool.com.cn&amp;sz=64"><div class="cardtext"><div class="site-name">站酷</div><div class="site-url">zcool.com.cn</div></div><button class="more" title="书签操作" draggable="false">⋮</button><div class="cardmenu"><button>打开网站</button><button>编辑</button><button class="danger">删除</button></div></article><button class="card add-card"><span class="plus">＋</span><span>添加网站</span></button></section>
@@ -269,6 +336,40 @@ render();
  const grid=document.getElementById('grid');if(grid){new MutationObserver(count).observe(grid,{childList:true});}
  const tabs=document.getElementById('tabs');if(tabs){new MutationObserver(count).observe(tabs,{childList:true,subtree:true});}
  count();
+})();
+</script>
+
+<script>
+/* ===== 深色 / 浅色模式切换 ===== */
+(function(){
+ const root=document.documentElement,btn=document.getElementById('themeToggle');if(!btn)return;
+ const apply=t=>{root.setAttribute('data-theme',t);const dark=t==='dark';btn.textContent=dark?'☀':'☾';btn.title=dark?'切换到浅色模式':'切换到深色模式';btn.setAttribute('aria-label',btn.title)};
+ let saved=null;try{saved=localStorage.getItem('yiayiayo-theme')}catch(e){}
+ apply(saved==='dark'||saved==='light'?saved:(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'));
+ btn.addEventListener('click',()=>{const t=root.getAttribute('data-theme')==='dark'?'light':'dark';try{localStorage.setItem('yiayiayo-theme',t)}catch(e){}apply(t)});
+})();
+</script>
+
+<script>
+/* ===== 主标题打字机循环动画 ===== */
+(function(){
+ const a=document.getElementById('typeA'),b=document.getElementById('typeB');if(!a||!b)return;
+ const segA='一起出发，',segB='灵感随行。',total=segA.length+segB.length;
+ const caret=document.getElementById('typeCaret');
+ if(matchMedia('(prefers-reduced-motion: reduce)').matches){if(caret)caret.style.display='none';return}
+ let i=total,dir=0; // 先完整显示，停顿后开始删除
+ function draw(){a.textContent=segA.slice(0,Math.min(i,segA.length));b.textContent=segB.slice(0,Math.max(0,i-segA.length))}
+ function step(){
+  if(dir===0){dir=-1;setTimeout(step,80);return}
+  if(dir===-1){
+   i--;draw();
+   if(i<=0){i=0;dir=1;setTimeout(step,650)}else setTimeout(step,42);
+  }else{
+   i++;draw();
+   if(i>=total){dir=0;setTimeout(step,2600)}else setTimeout(step,95+Math.random()*75);
+  }
+ }
+ setTimeout(step,2000);
 })();
 </script>
 
