@@ -41,7 +41,7 @@ yiayiayo 是一个在线的个人书签导航页（起始页），在浏览器�
 
 主要特性如下：
 
-- 即开即用：在线访问 www.yiayiayo.com，电脑和手机浏览器均可自适应显示；
+- 即开即用：在线访问 www.yiayiayo.com 电脑和手机浏览器均可自适应显示；
 
 - 多引擎搜索：内置百度、Google、必应、搜狗，可自由增删；
 
@@ -59,7 +59,7 @@ yiayiayo 是一个在线的个人书签导航页（起始页），在浏览器�
 
 ## **2.1 打开网站**
 
-- 在任意现代浏览器（Chrome、Edge、Safari、Firefox 等）的地址栏输入 www.yiayiayo.com，回车即可打开；
+- 在任意现代浏览器（Chrome、Edge、Safari、Firefox 等）的地址栏输入 www.yiayiayo.com 回车即可打开；
 
 - 手机、平板与电脑浏览器均可访问，页面会随屏幕宽度自动调整布局；
 
